@@ -7,6 +7,8 @@ namespace Kompanion.Application.Controllers;
 
 public abstract class BaseApiController : ControllerBase
 {
+    protected const string DefaultApiRoute = "api/v{version:apiVersion}";
+
     private readonly ISender _sender;
     protected BaseApiController(ISender sender)
     {

@@ -9,7 +9,7 @@ using Kompanion.Application.Swagger.Options;
 
 namespace Kompanion.Application.Swagger;
 
-public static class Installer
+public static class DependencyInstaller
 {
     public static IServiceCollection AddSwagger(this IServiceCollection services, Action<SwaggerOptions> swaggerAction = null)
     {

@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\..\..\..\env\common.props" />
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\BuildingBlocks\Kompanion.Application\Kompanion.Application.csproj" />
+		<ProjectReference Include="..\Kompanion.ECommerce.Domain\Kompanion.ECommerce.Domain.csproj" />
+	</ItemGroup>
+
+</Project>

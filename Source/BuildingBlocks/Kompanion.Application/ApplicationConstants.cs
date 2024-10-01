@@ -15,5 +15,16 @@ public static class ApplicationConstants
         public static string DefaultBearerDescription => $"JWT Authorization header using the {BearerHeaderKey} scheme. \r\n\r\n Enter your token in the text input below.";
 
     }
+
+    public static class ConfigurationSectionConstants
+    {
+        public const string RedisSection = "Redis";
+        public const string LogSection = "Logger";
+    }
+
+    public static class ApiVersioningConstants
+    {
+        public const string DefaultApiVersion = "1.0";
+    }
 }
 
