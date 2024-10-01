@@ -32,5 +32,10 @@ public sealed class BankRepository : IBankRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<bool> DeleteAsync(int id, CancellationToken cancellationToken = default)
+    {
+        throw new NotImplementedException();
+    }
 }
 

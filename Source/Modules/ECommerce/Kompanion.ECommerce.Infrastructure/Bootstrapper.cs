@@ -36,6 +36,7 @@ public static class Bootstrapper
     {
         services.AddScoped<IBankRepository, BankRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
+        services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
     }
 }
 

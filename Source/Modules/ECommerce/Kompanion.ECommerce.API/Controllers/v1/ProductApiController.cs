@@ -93,5 +93,62 @@ public class ProductApiController(ISender sender) : BaseApiController(sender)
         return await Send(new DeleteProductCommand(productId));
     }
 
+
+    /// <summary>
+    /// Ürün fiyatı oluşturur.
+    /// </summary> 
+    /// <param name="command">Ürün fiyat bilgileri</param>
+    /// <returns></returns>  
+    /// <response code="201">Ürün fiyatı oluşturuldu.</response>
+    /// <response code="400">Model'de hatalı ya da işlem gerçekleştirilirken hata oluştu.</response>
+    /// <response code="403">Client'ın erişemediği kanal, claim ya da roleEntity.</response>
+    /// <response code="404">Ürün bulunamadı</response>
+    [HttpPost("prices")]
+    [ProducesResponseType(typeof(ApiResponse<int>), Status201Created)]
+    [ProducesResponseType(Status400BadRequest)]
+    [ProducesResponseType(Status404NotFound)]
+    [ProducesResponseType(Status403Forbidden)]
+    public async Task<IActionResult> CreatePrice([FromBody] CreateProductPriceCommand command)
+    {
+        return await Send(command);
+    }
+
+    /// <summary>
+    /// Ürün fiyatı günceller.
+    /// </summary> 
+    /// <param name="productPriceId">Ürün id</param>
+    /// <param name="command">Ürün fiyat bilgileri</param>
+    /// <returns></returns>  
+    /// <response code="400">Model'de hatalı ya da işlem gerçekleştirilirken hata oluştu.</response>
+    /// <response code="403">Client'ın erişemediği kanal, claim ya da roleEntity.</response>
+    /// <response code="404">Ürün fiyatı bulunamadı</response> 
+    [HttpPut("prices/{productPriceId}")]
+    [ProducesResponseType(typeof(ApiResponse), Status200OK)]
+    [ProducesResponseType(Status400BadRequest)]
+    [ProducesResponseType(Status404NotFound)]
+    [ProducesResponseType(Status403Forbidden)]
+    public async Task<IActionResult> UpdatePrice([FromRoute] int productPriceId, [FromBody] UpdateProductPriceCommand command)
+    {
+        return await Send(command with { Id = productPriceId });
+    }
+
+
+    /// <summary>
+    /// Ürün fiyatı siler.
+    /// </summary>
+    /// <param name="productPriceId">Ürün fiyat id</param>
+    /// <returns></returns>
+    /// <response code="400">Model'de hatalı ya da işlem gerçekleştirilirken hata oluştu.</response>
+    /// <response code="403">Client'ın erişemediği kanal, claim ya da roleEntity.</response>
+    /// <response code="404">Ürün fiyatı bulunamadı</response>
+    [HttpDelete("prices/{productPriceId}")]
+    [ProducesResponseType(typeof(ApiResponse), Status200OK)]
+    [ProducesResponseType(Status400BadRequest)]
+    [ProducesResponseType(Status403Forbidden)]
+    [ProducesResponseType(Status404NotFound)]
+    public async Task<IActionResult> DeletePriceById([FromRoute] int productPriceId)
+    {
+        return await Send(new DeleteProductPriceCommand(productPriceId));
+    }
 }
 
