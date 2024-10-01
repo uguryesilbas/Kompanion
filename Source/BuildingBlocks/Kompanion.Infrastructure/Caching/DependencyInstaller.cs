@@ -52,7 +52,10 @@ public static class DependencyInstaller
             DefaultDatabase = options.DefaultDatabase
         };
 
-        options.Endpoints.ForEach(redisConfigurationOptions.EndPoints.Add);
+        foreach (RedisEndpointOptions endpointOptions in options.Endpoints)
+        {
+            redisConfigurationOptions.EndPoints.Add(endpointOptions.Host, endpointOptions.Port);
+        }
 
         ConnectionMultiplexer connectionMultiplexer = ConnectionMultiplexer.Connect(redisConfigurationOptions);
 

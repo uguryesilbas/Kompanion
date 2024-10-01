@@ -3,6 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Kompanion.ECommerce.Infrastructure.Context;
 using Kompanion.ECommerce.Domain.Bank;
 using Kompanion.ECommerce.Infrastructure.Domain;
+using Kompanion.ECommerce.Domain.Product;
+using Kompanion.Infrastructure.Caching;
+using Kompanion.Application;
 
 namespace Kompanion.ECommerce.Infrastructure;
 
@@ -12,7 +15,7 @@ public static class Bootstrapper
     {
         //builder.AddSerilog(ApplicationConstants.ConfigurationSectionConstants.LogSection);
 
-        // builder.Services.AddDistributedCache(ApplicationConstants.ConfigurationSectionConstants.RedisSection);
+        builder.Services.AddDistributedCache(ApplicationConstants.ConfigurationSectionConstants.RedisSection);
 
         builder.Services.AddDbContext();
 
@@ -32,6 +35,7 @@ public static class Bootstrapper
     private static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IBankRepository, BankRepository>();
+        services.AddScoped<IProductRepository, ProductRepository>();
     }
 }
 

@@ -38,9 +38,12 @@ internal class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest
 
         TResponse response = await next();
 
-        TimeSpan cacheExpiry = cacheRequest.CacheExpiry ?? TimeSpan.FromHours(DefaultCacheExpirationInHours);
+        if (response.IsSuccessStatusCode)
+        {
+            TimeSpan cacheExpiry = cacheRequest.CacheExpiry ?? TimeSpan.FromHours(DefaultCacheExpirationInHours);
 
-        await _cacheService.SetAsync(cacheKey, response, cacheExpiry, cacheRequest.Database ?? 0);
+            await _cacheService.SetAsync(cacheKey, response, cacheExpiry, cacheRequest.Database ?? 0);
+        }
 
         return response;
     }

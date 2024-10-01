@@ -10,5 +10,7 @@ public interface IRepository
 public interface IRepository<in TEntity> : IRepository where TEntity : BaseEntity
 {
     Task<bool> InsertAsync(TEntity entity, CancellationToken cancellationToken = default);
+
+    Task<bool> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default);
 }
 

@@ -7,7 +7,7 @@ public class RedisOptions
     private static readonly int Timeout = TimeSpan.FromSeconds(5).TotalMilliseconds.As<int>();
 
     public bool Enabled { get; set; }
-    public List<string> Endpoints { get; set; } = new();
+    public List<RedisEndpointOptions> Endpoints { get; set; } = new();
     public string Password { get; set; }
     public bool AbortOnConnectFail { get; set; } = true;
     public int AsyncTimeout { get; set; } = Timeout;

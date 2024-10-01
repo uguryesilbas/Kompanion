@@ -1,6 +1,5 @@
 ﻿using Kompanion.Application.Extensions;
 using Kompanion.Domain.Abstracts;
-using Kompanion.Domain.Extensions;
 using Kompanion.Domain.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +31,6 @@ public abstract class BaseDbContext : IPersistenceDbContext
         if (_connection is null)
         {
             _connection = new MySqlConnection(_connectionString);
-
             await _connection.OpenAsync(cancellationToken);
         }
 
@@ -46,12 +44,13 @@ public abstract class BaseDbContext : IPersistenceDbContext
             await _connection.CloseAsync();
             await _connection.DisposeAsync();
             _connection = null;
+            GC.SuppressFinalize(this);
         }
     }
 
     public virtual async Task<int> ExecuteStoredProcedureAsync(string storeProcedureName, CancellationToken cancellationToken = default, params MySqlParameter[] parameters)
     {
-        using MySqlConnection connection = await GetConnectionAsync(cancellationToken);
+        MySqlConnection connection = await GetConnectionAsync(cancellationToken);
 
         using MySqlCommand command = CreateStoredProcedureCommand(storeProcedureName, connection);
 
@@ -60,15 +59,15 @@ public abstract class BaseDbContext : IPersistenceDbContext
         return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
-    public virtual async Task<T> FindByIdAsync<T>(string storeProcedureName, MySqlParameter parameter, CancellationToken cancellationToken = default) where T : BaseEntity, new()
+    public virtual async Task<T> FindByIdAsync<T>(string storeProcedureName, int id, CancellationToken cancellationToken = default) where T : BaseEntity, new()
     {
         T entity = new();
 
-        using MySqlConnection connection = await GetConnectionAsync(cancellationToken);
+        MySqlConnection connection = await GetConnectionAsync(cancellationToken);
 
         using MySqlCommand command = CreateStoredProcedureCommand(storeProcedureName, connection);
 
-        command.Parameters.Add(parameter);
+        command.Parameters.AddWithValue("p_Id", id);
 
         using (DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken))
         {
@@ -92,7 +91,7 @@ public abstract class BaseDbContext : IPersistenceDbContext
 
     public virtual async Task<bool> InsertAsync<T>(string storeProcedureName, T entity, CancellationToken cancellationToken = default) where T : BaseEntity
     {
-        using MySqlConnection connection = await GetConnectionAsync(cancellationToken);
+        MySqlConnection connection = await GetConnectionAsync(cancellationToken);
 
         using MySqlCommand command = CreateStoredProcedureCommand(storeProcedureName, connection);
 
@@ -117,18 +116,45 @@ public abstract class BaseDbContext : IPersistenceDbContext
         return false;
     }
 
+    public virtual async Task<bool> UpdateAsync<T>(string storeProcedureName, T entity, CancellationToken cancellationToken = default) where T : BaseEntity
+    {
+        MySqlConnection connection = await GetConnectionAsync(cancellationToken);
+
+        using MySqlCommand command = CreateStoredProcedureCommand(storeProcedureName, connection);
+
+        AddEntityParameters(command, entity);
+
+        MySqlParameter outputIdParam = new("p_LastInsertID", MySqlDbType.Int32)
+        {
+            Direction = ParameterDirection.Output,
+        };
+
+        command.Parameters.Add(outputIdParam);
+
+        return await command.ExecuteNonQueryAsync(cancellationToken) > 0;
+    }
+
+    public virtual async Task<bool> DeleteAsync(string storeProcedureName, int id, CancellationToken cancellationToken = default)
+    {
+        MySqlConnection connection = await GetConnectionAsync(cancellationToken);
+
+        using MySqlCommand command = CreateStoredProcedureCommand(storeProcedureName, connection);
+
+        command.Parameters.AddWithValue("p_Id", id);
+
+        return await command.ExecuteNonQueryAsync(cancellationToken) > 0;
+    }
+
     private void AddEntityParameters<T>(MySqlCommand command, T entity) where T : BaseEntity
     {
         int userId = _httpContextAccessor.GetUserId();
 
         foreach (PropertyInfo prop in typeof(T).GetProperties())
         {
-            if (prop.Name == nameof(BaseEntity.Id)) continue;
-
             object value = prop.Name switch
             {
-                nameof(ITrackableEntity.CreatedDateTime) => DateTimeExtensions.Now,
                 nameof(ITrackableEntity.CreatedUserId) => userId,
+                nameof(ITrackableEntity.UpdatedUserId) => userId,
                 _ => prop.GetValue(entity, null)
             };
 

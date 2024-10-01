@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Kompanion.Application.Extensions;
 using Kompanion.Application.Models;
+using System.Text.Json.Serialization;
 
 namespace Kompanion.Application.Wrappers;
 
@@ -9,7 +10,12 @@ public record ApiResponse<TData>(TData Data) : ApiResponse;
 
 public record ApiResponse
 {
+    [JsonIgnore]
     public int HttpStatusCode { get; set; } = StatusCodes.Status200OK;
+
+    [JsonIgnore]
+    public bool IsSuccessStatusCode => HttpStatusCode >= 200 && HttpStatusCode < 300;
+
     public List<ApiResponseErrorMessage> Errors { get; set; } = new();
     public List<ApiResponseInformationMessage> Informations { get; set; } = new();
     public List<ApiResponseWarningMessage> Warnings { get; set; } = new();
