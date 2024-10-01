@@ -18,4 +18,9 @@ public static class StoreProcedureConstants
         public const string IsExistsPriceByProductIdWithCountryId = nameof(IsExistsPriceByProductIdWithCountryId);
         public const string GetPricesByProductIdWithCountryId = nameof(GetPricesByProductIdWithCountryId);
     }
+
+    public static class Order
+    {
+        public const string CreateOrder = nameof(CreateOrder);
+    }
 }

@@ -5,6 +5,7 @@ using Kompanion.ECommerce.Infrastructure.Domain;
 using Kompanion.ECommerce.Domain.Product;
 using Kompanion.Infrastructure.Caching;
 using Kompanion.Application;
+using Kompanion.ECommerce.Domain.Order;
 
 namespace Kompanion.ECommerce.Infrastructure;
 
@@ -35,6 +36,7 @@ public static class Bootstrapper
     {
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
+        services.AddScoped<IOrderRepository, OrderRepository>();
     }
 }
 

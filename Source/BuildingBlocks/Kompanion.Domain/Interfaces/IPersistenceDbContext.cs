@@ -9,7 +9,7 @@ public interface IPersistenceDbContext : IAsyncDisposable
 
     MySqlCommand CreateStoredProcedureCommand(string storeProcedureName, MySqlConnection connection);
 
-    Task<int> CountAsync(string storeProcedureName, CancellationToken cancellationToken = default, params MySqlParameter[] parameters);
+    Task<int> ExecuteStoredProcedureAsync(string storeProcedureName, CancellationToken cancellationToken = default, params MySqlParameter[] parameters);
 
     Task<T> FindByIdAsync<T>(string storeProcedureName, int id, CancellationToken cancellationToken = default) where T : BaseEntity, new();
 

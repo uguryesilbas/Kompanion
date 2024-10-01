@@ -48,7 +48,7 @@ public abstract class BaseDbContext : IPersistenceDbContext
         }
     }
 
-    public virtual async Task<int> CountAsync(string storeProcedureName, CancellationToken cancellationToken = default, params MySqlParameter[] parameters)
+    public virtual async Task<int> ExecuteStoredProcedureAsync(string storeProcedureName, CancellationToken cancellationToken = default, params MySqlParameter[] parameters)
     {
         MySqlConnection connection = await GetConnectionAsync(cancellationToken);
 
@@ -56,9 +56,7 @@ public abstract class BaseDbContext : IPersistenceDbContext
 
         command.Parameters.AddRange(parameters);
 
-        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-
-        return !reader.HasRows ? 0 : (await reader.ReadAsync(cancellationToken) ? reader.GetInt32(0) : 0);
+        return await command.ExecuteNonQueryAsync(cancellationToken);
     }
 
     public virtual async Task<T> FindByIdAsync<T>(string storeProcedureName, int id, CancellationToken cancellationToken = default) where T : BaseEntity, new()
