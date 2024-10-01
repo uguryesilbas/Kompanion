@@ -36,9 +36,7 @@ CREATE TABLE ProductPrices (
 
 CREATE TABLE Orders (
     Id INT AUTO_INCREMENT PRIMARY KEY,
-    UserId INT NOT NULL,
     TotalAmount DECIMAL(10, 2) NOT NULL,
-    OrderDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     Status TINYINT NOT NULL,
 	CreatedDateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     UpdatedDateTime TIMESTAMP,
@@ -82,20 +80,6 @@ CREATE TABLE PaymentRules (
     CreatedUserId INT NOT NULL,
     UpdatedUserId INT,
     FOREIGN KEY (ProductId) REFERENCES Products(Id),
-    FOREIGN KEY (BankId) REFERENCES Banks(Id)
-);
-
-CREATE TABLE Payments (
-    Id INT AUTO_INCREMENT PRIMARY KEY,
-    OrderId INT,
-    BankId INT,
-    PaymentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    Amount DECIMAL(10, 2),
-	CreatedDateTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    UpdatedDateTime TIMESTAMP,
-    CreatedUserId INT NOT NULL,
-    UpdatedUserId INT,
-    FOREIGN KEY (OrderId) REFERENCES Orders(Id),
     FOREIGN KEY (BankId) REFERENCES Banks(Id)
 );
 

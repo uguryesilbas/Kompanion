@@ -63,7 +63,6 @@ END //
 
 DELIMITER ;
 
-
 DELIMITER //
 
 CREATE PROCEDURE GetProductById
@@ -83,6 +82,7 @@ CREATE PROCEDURE DeleteProductById
 IN p_Id INT
 )
 BEGIN
+	DELETE FROM ProductPrices Where ProductId = p_Id;
 	DELETE FROM Products WHERE Id = p_Id;
 END //
 
@@ -109,5 +109,8 @@ IN p_Id INT
 BEGIN
 	DELETE FROM ProductPrices WHERE Id = p_Id;
 END //
+
+DELIMITER ;
+
 
 

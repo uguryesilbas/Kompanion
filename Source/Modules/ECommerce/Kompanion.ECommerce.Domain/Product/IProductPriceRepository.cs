@@ -4,6 +4,6 @@ namespace Kompanion.ECommerce.Domain.Product;
 
 public interface IProductPriceRepository : IRepository<ProductPriceEntity>
 {
-    Task<ProductPriceEntity> FindById(int id, CancellationToken cancellationToken);
+    Task<ProductPriceEntity> FindByIdAsync(int id, CancellationToken cancellationToken = default);
 }
 

@@ -5,7 +5,11 @@ namespace Kompanion.Domain.Interfaces;
 
 public interface IPersistenceDbContext : IAsyncDisposable
 {
-    Task<int> ExecuteStoredProcedureAsync(string storeProcedureName, CancellationToken cancellationToken = default, params MySqlParameter[] parameters);
+    Task<MySqlConnection> GetConnectionAsync(CancellationToken cancellationToken);
+
+    MySqlCommand CreateStoredProcedureCommand(string storeProcedureName, MySqlConnection connection);
+
+    Task<int> CountAsync(string storeProcedureName, CancellationToken cancellationToken = default, params MySqlParameter[] parameters);
 
     Task<T> FindByIdAsync<T>(string storeProcedureName, int id, CancellationToken cancellationToken = default) where T : BaseEntity, new();
 

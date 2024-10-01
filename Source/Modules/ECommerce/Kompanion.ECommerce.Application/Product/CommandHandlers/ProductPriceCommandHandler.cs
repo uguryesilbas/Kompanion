@@ -41,7 +41,7 @@ public sealed class ProductPriceCommandHandler : ICommandHandler<CreateProductPr
 
     public async Task<ApiResponse> Handle(UpdateProductPriceCommand request, CancellationToken cancellationToken)
     {
-        ProductPriceEntity productPrice = await _productPriceRepository.FindById(request.Id, cancellationToken);
+        ProductPriceEntity productPrice = await _productPriceRepository.FindByIdAsync(request.Id, cancellationToken);
 
         if (productPrice is null)
         {
@@ -64,7 +64,7 @@ public sealed class ProductPriceCommandHandler : ICommandHandler<CreateProductPr
 
     public async Task<ApiResponse> Handle(DeleteProductPriceCommand request, CancellationToken cancellationToken)
     {
-        ProductPriceEntity productPrice = await _productPriceRepository.FindById(request.Id, cancellationToken);
+        ProductPriceEntity productPrice = await _productPriceRepository.FindByIdAsync(request.Id, cancellationToken);
 
         if (productPrice is null)
         {

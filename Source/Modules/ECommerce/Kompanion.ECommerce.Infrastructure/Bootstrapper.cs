@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Kompanion.ECommerce.Infrastructure.Context;
-using Kompanion.ECommerce.Domain.Bank;
 using Kompanion.ECommerce.Infrastructure.Domain;
 using Kompanion.ECommerce.Domain.Product;
 using Kompanion.Infrastructure.Caching;
@@ -34,7 +33,6 @@ public static class Bootstrapper
 
     private static void AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IBankRepository, BankRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
     }

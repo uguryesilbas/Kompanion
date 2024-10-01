@@ -11,7 +11,7 @@ public sealed partial class ProductPriceEntity : BaseEntity, ITrackableEntity
 
     }
 
-    public ProductPriceEntity(int productId, int countryId, decimal price)
+    private ProductPriceEntity(int productId, int countryId, decimal price)
     {
         ProductId = productId;
         CountryId = countryId;

@@ -2,12 +2,16 @@
 using Kompanion.ECommerce.Domain.Product;
 using Kompanion.ECommerce.Infrastructure.Constants;
 using Kompanion.ECommerce.Infrastructure.Context;
+using MySql.Data.MySqlClient;
+using System.Data.Common;
+using System.Reflection;
 
 namespace Kompanion.ECommerce.Infrastructure.Domain;
 
 public sealed class ProductPriceRepository : IProductPriceRepository
 {
     private readonly IECommerceDbContext _dbContext;
+
     public IPersistenceDbContext DbContext => _dbContext;
 
     public ProductPriceRepository(IECommerceDbContext dbContext)
@@ -17,7 +21,7 @@ public sealed class ProductPriceRepository : IProductPriceRepository
 
     public async Task<bool> InsertAsync(ProductPriceEntity entity, CancellationToken cancellationToken = default)
     {
-      return  await _dbContext.InsertAsync(StoreProcedureConstants.ProductPriceConstants.SaveOrUpdateProductPrice, entity, cancellationToken);
+        return await _dbContext.InsertAsync(StoreProcedureConstants.ProductPriceConstants.SaveOrUpdateProductPrice, entity, cancellationToken);
     }
 
     public async Task<bool> UpdateAsync(ProductPriceEntity entity, CancellationToken cancellationToken = default)
@@ -25,7 +29,7 @@ public sealed class ProductPriceRepository : IProductPriceRepository
         return await _dbContext.UpdateAsync(StoreProcedureConstants.ProductPriceConstants.SaveOrUpdateProductPrice, entity, cancellationToken);
     }
 
-    public async Task<ProductPriceEntity> FindById(int id, CancellationToken cancellationToken)
+    public async Task<ProductPriceEntity> FindByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await _dbContext.FindByIdAsync<ProductPriceEntity>(StoreProcedureConstants.ProductPriceConstants.GetProductPriceById, id, cancellationToken);
     }

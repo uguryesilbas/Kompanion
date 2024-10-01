@@ -8,5 +8,7 @@ public class ECommerceDbContext : BaseDbContext, IECommerceDbContext
     {
 
     }
+
+
 }
 

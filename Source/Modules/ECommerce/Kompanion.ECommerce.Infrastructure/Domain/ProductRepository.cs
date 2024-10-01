@@ -2,6 +2,7 @@
 using Kompanion.ECommerce.Domain.Product;
 using Kompanion.ECommerce.Infrastructure.Constants;
 using Kompanion.ECommerce.Infrastructure.Context;
+using MySql.Data.MySqlClient;
 
 namespace Kompanion.ECommerce.Infrastructure.Domain;
 
