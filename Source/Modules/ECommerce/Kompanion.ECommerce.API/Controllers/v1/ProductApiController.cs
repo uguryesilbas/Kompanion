@@ -6,6 +6,7 @@ using Kompanion.ECommerce.Application.Product.Commands;
 using Kompanion.ECommerce.Application.Product.Dtos;
 using Kompanion.ECommerce.Application.Product.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
@@ -15,7 +16,7 @@ namespace Kompanion.ECommerce.API.Controllers.v1;
 [ApiVersion(ApplicationConstants.ApiVersioningConstants.DefaultApiVersion)]
 [Route($"{DefaultApiRoute}/{ControllerNameRoute}")]
 [ApiController]
-//[Authorize]
+[Authorize]
 public class ProductApiController(ISender sender) : BaseApiController(sender)
 {
     private const string ControllerNameRoute = "products";

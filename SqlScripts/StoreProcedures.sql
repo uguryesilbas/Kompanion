@@ -3,7 +3,7 @@ DELIMITER //
 CREATE PROCEDURE CreateOrder (
     IN p_ProductId INT,
     IN p_Quantity INT,
-    IN p_OrderStatus TINYINT,
+    IN p_OrderId INT,
     IN p_UserId INT,
     IN p_CountryId INT
 )
@@ -11,11 +11,10 @@ BEGIN
 	DECLARE v_Price DECIMAL(10, 2) DEFAULT 0;
     DECLARE v_TotalPrice DECIMAL(10, 2) DEFAULT 0;
     DECLARE v_StockQuantity INT DEFAULT 0;
-    DECLARE v_OrderId INT DEFAULT 0;
     DECLARE v_ProductName VARCHAR(250);
+     DECLARE v_CurrencyCode VARCHAR(3);
 	DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        ROLLBACK;
         RESIGNAL;
     END;
     
@@ -38,22 +37,18 @@ BEGIN
         SET @errorMsg = CONCAT(v_ProductName, ' ürününe ait fiyat bulunamadı!');
 		SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = @errorMsg;
 	END IF;
-        
-	START TRANSACTION;
     
-    INSERT INTO Orders (`Status`,`CreatedDateTime`,`CreatedUserId`)
-	VALUES (p_OrderStatus,  CURRENT_TIMESTAMP, p_UserId);
+    SELECT CurrencyCode
+    INTO v_CurrencyCode
+    FROM Countries
+    WHERE Id = p_CountryId;
 	
-    SET v_OrderId = LAST_INSERT_ID();
-    
     SET v_TotalPrice =  v_Price * p_Quantity;
 
-	INSERT INTO OrderDetails (`OrderId`,`ProductId`,`Quantity`,`PriceAtPurchase`,`CreatedDateTime`,`CreatedUserId`)
-	VALUES (v_OrderId, p_ProductId, p_Quantity, v_TotalPrice, CURRENT_TIMESTAMP, p_UserId);
+	INSERT INTO OrderDetails (`OrderId`,`ProductId`,`Quantity`,`PriceAtPurchase`,  `CurrencyCodeAtPurchase`,  `CreatedDateTime`,`CreatedUserId`)
+	VALUES (p_OrderId, p_ProductId, p_Quantity, v_TotalPrice, v_CurrencyCode, CURRENT_TIMESTAMP, p_UserId);
 	
     UPDATE Products SET StockQuantity = StockQuantity - p_Quantity WHERE Id = p_ProductId;
-    
-    COMMIT;	
 	
 END //
 
@@ -126,6 +121,23 @@ DELIMITER ;
 
 DELIMITER //
 
+CREATE PROCEDURE InsertOrder
+(
+IN p_Status TINYINT,
+IN p_CountryId INT,
+IN p_CreatedUserId INT,
+OUT p_LastInsertID INT
+)
+BEGIN
+        INSERT INTO Orders (Status, CountryId, CreatedDateTime, CreatedUserId)
+        VALUES (p_Status, p_CountryId, CURRENT_TIMESTAMP, p_CreatedUserId);
+        SET p_LastInsertID = LAST_INSERT_ID();
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
 CREATE PROCEDURE GetProductById
 (
 IN p_Id INT
@@ -173,5 +185,53 @@ END //
 
 DELIMITER ;
 
+DELIMITER //
 
+CREATE PROCEDURE GetOrderById
+(
+IN p_Id INT
+)
+BEGIN
+	SELECT * FROM Orders WHERE Id = p_Id;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetOrderDetailsByOrderId
+(
+IN p_Id INT
+)
+BEGIN
+	SELECT * FROM OrderDetails WHERE OrderId = p_Id;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE GetPaymentRulesByProductIds
+(
+IN p_Ids LONGTEXT,
+IN p_CountryId INT
+)
+BEGIN
+	SELECT * FROM PaymentRules WHERE FIND_IN_SET(ProductId, p_Ids) AND CountryId = p_CountryId;
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE UpdateOrderStatusById
+(
+IN p_Id INT,
+IN p_Status tinyint
+)
+BEGIN
+	UPDATE Orders SET Status = p_Status WHERE Id = p_Id;
+END //
+
+DELIMITER ;
 

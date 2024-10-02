@@ -11,12 +11,13 @@ public sealed partial class OrderDetailEntity : BaseEntity, ITrackableEntity
 
     }
 
-    private OrderDetailEntity(int orderId, int productId, decimal priceAtPurchase, int quantity)
+    private OrderDetailEntity(int orderId, int productId, decimal priceAtPurchase, int quantity, string currencyCodeAtPurchase)
     {
         OrderId = orderId;
         ProductId = productId;
         PriceAtPurchase = priceAtPurchase;
         Quantity = quantity;
+        CurrencyCodeAtPurchase = currencyCodeAtPurchase;
         CreatedDateTime = DateTimeExtensions.Now;
     }
 
@@ -25,12 +26,13 @@ public sealed partial class OrderDetailEntity : BaseEntity, ITrackableEntity
     public int ProductId { get; private set; }
     public decimal PriceAtPurchase { get; private set; }
     public int Quantity { get; private set; }
+    public string CurrencyCodeAtPurchase { get; private set; }
     public DateTime CreatedDateTime { get; private set; }
     public DateTime? UpdatedDateTime { get; private set; }
     public int CreatedUserId { get; private set; }
     public int? UpdatedUserId { get; private set; }
 
-    public static OrderDetailEntity CreateNew(int orderId, int productId, decimal priceAtPurchase, int quantity) => new(orderId, productId, priceAtPurchase, quantity);
+    public static OrderDetailEntity CreateNew(int orderId, int productId, decimal priceAtPurchase, int quantity, string currencyCodeAtPurchase) => new(orderId, productId, priceAtPurchase, quantity, currencyCodeAtPurchase);
 }
 
 public sealed partial class OrderDetailEntity

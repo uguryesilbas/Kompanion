@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Kompanion.ECommerce.Infrastructure.Domain;
 
-public sealed class ProductPriceRepository : IProductPriceRepository
+internal sealed class ProductPriceRepository : IProductPriceRepository
 {
     private readonly IECommerceDbContext _dbContext;
 

@@ -21,6 +21,19 @@ public static class StoreProcedureConstants
 
     public static class Order
     {
+        public const string InsertOrder = nameof(InsertOrder);
         public const string CreateOrder = nameof(CreateOrder);
+        public const string GetOrderById = nameof(GetOrderById);
+        public const string UpdateOrderStatusById = nameof(UpdateOrderStatusById);
+    }
+
+    public static class OrderDetail
+    {
+        public const string GetOrderDetailsByOrderId = nameof(GetOrderDetailsByOrderId);
+    }
+
+    public static class PaymentRule
+    {
+        public const string GetPaymentRulesByProductIds = nameof(GetPaymentRulesByProductIds);
     }
 }

@@ -12,6 +12,8 @@ WebApplication app = builder.Build();
 
 app.UseSwagger();
 
+app.UseHsts();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

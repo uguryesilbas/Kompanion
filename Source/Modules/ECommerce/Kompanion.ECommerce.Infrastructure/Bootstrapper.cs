@@ -6,6 +6,12 @@ using Kompanion.ECommerce.Domain.Product;
 using Kompanion.Infrastructure.Caching;
 using Kompanion.Application;
 using Kompanion.ECommerce.Domain.Order;
+using Kompanion.Infrastructure.Payment;
+using Kompanion.ECommerce.Domain.PaymentRule;
+using Kompanion.Infrastructure.Invoicing;
+using Kompanion.Infrastructure.Notification;
+using Kompanion.ECommerce.Infrastructure.Saga.Order;
+using Kompanion.Infrastructure.Logging;
 
 namespace Kompanion.ECommerce.Infrastructure;
 
@@ -13,13 +19,16 @@ public static class Bootstrapper
 {
     public static WebApplicationBuilder AddECommerceInfrastructures(this WebApplicationBuilder builder)
     {
-        //builder.AddSerilog(ApplicationConstants.ConfigurationSectionConstants.LogSection);
+        builder.AddSerilog(ApplicationConstants.ConfigurationSectionConstants.LogSection);
 
         builder.Services.AddDistributedCache(ApplicationConstants.ConfigurationSectionConstants.RedisSection);
 
         builder.Services.AddDbContext();
 
         builder.Services.AddRepositories();
+
+        builder.Services.AddServices();
+
 
         return builder;
     }
@@ -37,6 +46,19 @@ public static class Bootstrapper
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IProductPriceRepository, ProductPriceRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
+        services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+        services.AddScoped<IPaymentRuleRepository, PaymentRuleRepository>();
+    }
+
+    private static void AddServices(this IServiceCollection services)
+    {
+        services.AddPaymentService();
+
+        services.AddInvoiceService();
+
+        services.AddNotifacationService();
+
+        services.AddTransient<IOrderProcessSagaService, OrderProcessSagaService>();
     }
 }
 

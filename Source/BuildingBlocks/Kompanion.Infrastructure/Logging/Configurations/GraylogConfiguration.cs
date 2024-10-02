@@ -20,7 +20,7 @@ internal class GraylogConfiguration : BaseLogConfiguration
             Facility = graylogOptions.Facility,
             UseSsl = graylogOptions.UseSsl,
             MinimumLogEventLevel = LogEventLevel.Information,
-            TransportType = TransportType.Tcp,
+            TransportType = TransportType.Udp,
             UseGzip = true,
         };
 

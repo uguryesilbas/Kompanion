@@ -35,7 +35,7 @@ internal sealed class ElasticsearchConfiguration : BaseLogConfiguration
         Uri address = new Uri(elasticsearchOptions.Address);
 
         ElasticsearchClientSettings clientSettings = new ElasticsearchClientSettings(address)
-            .DefaultIndex(elasticsearchOptions.Address);
+            .DefaultIndex(elasticsearchOptions.Index);
 
         if (!elasticsearchOptions.UseAuthentication)
         {

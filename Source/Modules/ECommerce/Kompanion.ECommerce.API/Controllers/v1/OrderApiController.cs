@@ -3,8 +3,8 @@ using Kompanion.Application;
 using Kompanion.Application.Controllers;
 using Kompanion.Application.Wrappers;
 using Kompanion.ECommerce.Application.Order.Commands;
-using Kompanion.ECommerce.Application.Product.Commands;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Microsoft.AspNetCore.Http.StatusCodes;
 
@@ -14,18 +14,18 @@ namespace Kompanion.ECommerce.API.Controllers.v1;
 [ApiVersion(ApplicationConstants.ApiVersioningConstants.DefaultApiVersion)]
 [Route($"{DefaultApiRoute}/{ControllerNameRoute}")]
 [ApiController]
-//[Authorize]
+[Authorize]
 public class OrderApiController(ISender sender) : BaseApiController(sender)
 {
     private const string ControllerNameRoute = "Orders";
 
 
     /// <summary>
-    /// Ürün oluşturur.
+    /// Sipariş oluşturur.
     /// </summary> 
-    /// <param name="command">Ürün bilgileri</param>
+    /// <param name="command">Sipariş bilgileri</param>
     /// <returns></returns>  
-    /// <response code="201">Ürün oluşturuldu.</response>
+    /// <response code="201">Sipariş oluşturuldu.</response>
     /// <response code="400">Model'de hatalı ya da işlem gerçekleştirilirken hata oluştu.</response>
     /// <response code="403">Client'ın erişemediği kanal, claim ya da roleEntity.</response>
     [HttpPost]

@@ -2,11 +2,10 @@
 using Kompanion.ECommerce.Domain.Product;
 using Kompanion.ECommerce.Infrastructure.Constants;
 using Kompanion.ECommerce.Infrastructure.Context;
-using MySql.Data.MySqlClient;
 
 namespace Kompanion.ECommerce.Infrastructure.Domain;
 
-public sealed class ProductRepository : IProductRepository
+internal sealed class ProductRepository : IProductRepository
 {
     private readonly IECommerceDbContext _dbContext;
     public IPersistenceDbContext DbContext => _dbContext;

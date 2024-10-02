@@ -1,0 +1,40 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:4.2
+    container_name: mongo
+    restart: always
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: elasticsearch
+    environment:
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 1g
+    restart: always
+    ports:
+      - "9200:9200"
+
+  graylog:
+    image: graylog/graylog:4.3
+    container_name: graylog
+    environment:
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://127.0.0.1:9000/
+      - GRAYLOG_PASSWORD_SECRET=SomeRandomSecretString
+      - GRAYLOG_ROOT_PASSWORD_SHA2=ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f # password123'ın hash'i
+    entrypoint: /usr/bin/tini -- wait-for-it elasticsearch:9200 --timeout=60 -- /docker-entrypoint.sh
+    depends_on:
+      - mongo
+      - elasticsearch
+    restart: always
+    ports:
+      - "9000:9000"
+      - "1514:1514"
+      - "1514:1514/udp"
+      - "12201:12201"
+      - "12201:12201/udp"
